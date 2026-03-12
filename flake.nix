@@ -106,12 +106,12 @@
         homeManagerModules.default = { config, lib, pkgs, ... }:
           let
             cfg = config.services.icalnotifier;
-            jsonFormat = pkgs.formats.json { };
+            # jsonFormat = pkgs.formats.json { };
             package = cfg.package;
-            configFile = jsonFormat.generate "icalnotifier-settings.json" {
-              ics_urls = cfg.settings.ics_urls;
-              notification_minutes = cfg.settings.notification_minutes;
-            };
+            # configFile = jsonFormat.generate "icalnotifier-settings.json" {
+            #   ics_urls = cfg.settings.ics_urls;
+            #   notification_minutes = cfg.settings.notification_minutes;
+            # };
           in
           {
             options.services.icalnotifier = {
@@ -139,7 +139,7 @@
 
             config = lib.mkIf cfg.enable {
               home.packages = [ package ];
-              xdg.configFile."icalnotifier/settings.json".source = configFile;
+              #xdg.configFile."icalnotifier/settings.json".source = configFile;
               systemd.user.services.icalnotifier = {
                 Unit = {
                   Description = "icalnotifier tray app";
