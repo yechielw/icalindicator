@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "icalnotifier"
+version = "0.1.0"
+description = "Linux tray app that notifies before meetings from ICS feeds"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+icalnotifier = "icalnotifier.app:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["icalnotifier*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
