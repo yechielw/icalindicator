@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Verify flake
+        run: nix flake check
+
+      - name: Build release artifacts
+        run: nix build .#dist
+
+      - name: List artifacts
+        run: ls -lah result
+
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            result/*.deb
+            result/*.rpm
+            result/*.AppImage

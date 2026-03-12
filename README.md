@@ -12,6 +12,30 @@ nix build .#default
 nix flake check
 ```
 
+Build release artifacts with:
+
+```bash
+nix build .#dist
+ls result
+```
+
+This produces:
+
+```text
+icalnotifier_0.1.0_amd64.deb
+icalnotifier-0.1.0-1.x86_64.rpm
+icalnotifier-0.1.0-x86_64.AppImage
+```
+
+GitHub releases:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The workflow in [.github/workflows/release.yml](/home/yechiel/tools/icalnotifier/.github/workflows/release.yml) runs `nix flake check`, builds `.#dist`, and uploads the artifacts to the tagged GitHub release.
+
 Run with:
 
 ```bash

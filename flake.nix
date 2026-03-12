@@ -14,9 +14,10 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        pname = "icalnotifier";
+        version = "0.1.0";
         package = pkgs.python3Packages.buildPythonApplication {
-          pname = "icalnotifier";
-          version = "0.1.0";
+          inherit pname version;
           format = "pyproject";
           src = ./.;
           nativeBuildInputs = [
@@ -54,12 +55,31 @@
             platforms = pkgs.lib.platforms.linux;
           };
         };
+        debPackage = bundlers.bundlers.${system}.toDEB package;
+        rpmPackage = bundlers.bundlers.${system}.toRPM package;
+        appImagePackage = bundlers.bundlers.${system}.toAppImage package;
+        distPackage = pkgs.runCommand "${pname}-${version}-dist"
+          {
+            nativeBuildInputs = [ pkgs.coreutils pkgs.findutils ];
+          }
+          ''
+            mkdir -p "$out"
+
+            deb_file="$(find ${debPackage} -type f -name '*.deb' | head -n 1)"
+            rpm_file="$(find ${rpmPackage} -type f -name '*.rpm' | head -n 1)"
+            appimage_file="$(find ${appImagePackage} -type f -name '*.AppImage' | head -n 1)"
+
+            cp "$deb_file" "$out/${pname}_${version}_amd64.deb"
+            cp "$rpm_file" "$out/${pname}-${version}-1.x86_64.rpm"
+            cp "$appimage_file" "$out/${pname}-${version}-x86_64.AppImage"
+          '';
       in
       {
         packages.default = package;
-        packages.deb = bundlers.bundlers.${system}.toDEB package;
-        packages.rpm = bundlers.bundlers.${system}.toRPM package;
-        packages.appimage = bundlers.bundlers.${system}.toAppImage package;
+        packages.deb = debPackage;
+        packages.rpm = rpmPackage;
+        packages.appimage = appImagePackage;
+        packages.dist = distPackage;
 
         apps.default = flake-utils.lib.mkApp {
           drv = package;
