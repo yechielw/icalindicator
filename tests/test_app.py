@@ -41,4 +41,4 @@ def test_indicator_time_shows_weekday_later_this_week() -> None:
 def test_indicator_time_shows_date_for_next_week_or_later() -> None:
     now = datetime(2026, 3, 12, 10, 0, tzinfo=UTC)
     event = make_event(datetime(2026, 3, 20, 8, 0, tzinfo=UTC))
-    assert format_indicator_time(event, now) == "03-20"
+    assert format_indicator_time(event, now) == "03\n20"

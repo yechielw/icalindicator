@@ -72,7 +72,7 @@ def format_indicator_time(next_event: Event | None, now: datetime | None = None)
     if start.date() < next_week_start:
         return start.strftime("%a")
 
-    return start.strftime("%m-%d")
+    return start.strftime("%m\n%d")
 
 
 def build_tray_icon(text: str) -> QIcon:
